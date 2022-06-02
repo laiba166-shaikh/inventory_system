@@ -1,0 +1,6 @@
+export const USERS_START_LOADING= "USERS_START_LOADING";
+export const USERS_STOP_LOADING= "USERS_STOP_LOADING";
+export const USER_ERROR="USER_ERROR";
+export const GET_ALL_USERS="GET_ALL_USERS";
+export const GET_USER="GET_USER";
+export const UPDATE_USER="UPDATE_USER";
