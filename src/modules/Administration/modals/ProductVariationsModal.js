@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         borderBottom: "1px solid rgba(0,0,0,0.5)"
     }
 }))
-const ProductVariationsModal = ({ show, onClose, setFieldValue, variationTypes, productVariations }) => {
+const ProductVariationsModal = ({ show, onClose, setFieldValue, setStoreVariations, variationTypes, productVariations }) => {
 
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -34,6 +34,7 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, variationTypes, 
             options: [],
         }
     ])
+    const [submitVariations,setSubmitVariations] = useState([])
 
     const handleAddMoreVariation = () => {
         variations.push({
@@ -45,6 +46,7 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, variationTypes, 
     }
 
     const handleCancelModal = () => {
+        console.log("close")
         onClose()
         // setAddMoreVariation(true)
         // if(!productId){
@@ -59,44 +61,55 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, variationTypes, 
 
     const handleSaveAndContinue = () => {
         console.log("variation SUBMIT -> ", variations)
-        dispatch(setProductVariations(variations))
-        onClose()
+        setSubmitVariations([...variations])
     }
 
     useEffect(() => {
+        // console.log('mount')
         // setVariations([...productVariations])
-        return () => {
-            console.log('return')
-            setVariations([{
-                name: "",
-                variationTypeId: "",
-                options: [],
-            }])
+        // return () => {
+        //     console.log('return')
+        //     setVariations([{
+        //         name: "",
+        //         variationTypeId: "",
+        //         options: [],
+        //     }])
+        // }
+        if(submitVariations.length>=1){
+            //redux state set
+            setStoreVariations([...submitVariations])
+            onClose()
         }
-    }, [])
+    }, [submitVariations])
 
     useEffect(() => {
+        console.log("hi")
+        if (productVariations.every(variation => variation.name === "" && variation.variationTypeId === "")) {
+            setFieldValue("isvariableProduct", false)
+            return
+        }
         if (productVariations.length >= 1) {
-            if (productVariations.every(variation => variation.name === "" && variation.variationTypeId === "")) {
-                console.log('modal')
-                setFieldValue("isvariableProduct", false)
-                return
-            }
             console.log("redux var get ->", productVariations)
             setVariations([...productVariations])
         }
     }, [productVariations, setFieldValue])
 
-    // useEffect(() => {
-    //     if (variations.length === 2) {
-    //         setAddMoreVariation(false)
-    //     } else {
-    //         setAddMoreVariation(true)
-    //     }
-    // }, [variations])
+    useEffect(() => {
+        console.log("local state ->",variations)
+        if (variations.length === 2) {
+            setAddMoreVariation(false)
+        } else {
+            setAddMoreVariation(true)
+        }
+    }, [variations])
+
+    const setOptionOnSubmit = (index,optionList) => {
+        variations[index].options = optionList
+        setVariations([...variations])
+    }
 
     return (
-        <Dialog open={show} onClose={onClose} maxWidth="md" fullWidth={true} className={classes.root}>
+        <Dialog open={show} onClose={handleCancelModal} maxWidth="md" fullWidth={true} className={classes.root}>
             {loading && <Loader />}
             <DialogTitle className={classes.formTitle}>
                 <Typography variant='h4' style={{ color: "#fff" }}>
@@ -112,6 +125,7 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, variationTypes, 
                             index={index}
                             handleChangeVariation={setVariations}
                             storeVariations={productVariations}
+                            setOptions={setOptionOnSubmit}
                         />
                         {(addMoreVariation || variations.length < 2) &&
                             <>
@@ -142,7 +156,11 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, variationTypes, 
 
 const mapStateToProps = (state) => ({
     variationTypes: state.variationTypes.variationType,
-    productVariations: state.productVariations.productVariations,
+    productVariations: state.storeVariations.productVariations,
 })
 
-export default connect(mapStateToProps)(ProductVariationsModal);
+const actions = {
+    setStoreVariations: setProductVariations
+}
+
+export default connect(mapStateToProps, actions)(ProductVariationsModal);

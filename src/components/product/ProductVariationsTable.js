@@ -117,7 +117,7 @@ const ProductVariationsTable = ({ productVariations, rows, setRows, setFieldValu
             }else {
                 if (!productId || !variableProduct) {
                     //create rows
-                console.log("debug4")
+                    console.log("debug4")
                     setFieldValue("isvariableProduct", true)
                     const rowsInitialData = createTableInitialValues(productVariations,rows)
                     setRows([...rowsInitialData])
@@ -166,8 +166,7 @@ const ProductVariationsTable = ({ productVariations, rows, setRows, setFieldValu
     )
 }
 const mapStateToProps = (state) => ({
-    productVariations: state.productVariations.productVariations,
-    operationStatus: state.productVariations.status
+    productVariations: state.storeVariations.productVariations,
 })
 const actions = {
     getProductItemImage

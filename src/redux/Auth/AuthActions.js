@@ -18,9 +18,11 @@ export const signin = (username, password) => async (dispatch) => {
                 user: userData
             }
         })
+        return 1
     } catch (error) {
         dispatch({ type: AUTH_ERROR, payload: { errorMessage: "invalid email or password" } })
         console.log(error.response)
+        return 0
     }
 }
 

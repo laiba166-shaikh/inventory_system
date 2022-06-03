@@ -108,9 +108,12 @@ const SigninForm = ({ signin }) => {
     const handleErrorClose = () => setShowError(false);
 
     const handleSubmit = () => {
-        signin(username, password)
-        setUsername("")
-        setPassword("")
+        signin(username, password).then(res=>{
+            if(res){
+                setUsername("")
+                setPassword("")
+            }
+        })
     }
     return (
         <Box className={classes.root}>

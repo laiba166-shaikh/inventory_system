@@ -153,23 +153,23 @@ export const uploadProductImage = (productId, productItems, productArray,prevIte
             // const id = item._id
             const currentItem = productArray[index]
             const image = currentItem?.img
+            const uniqueIdentifier = currentItem.var2?.id ? `${currentItem.var1.optionName}-${currentItem.var2.optionName}` : `${currentItem.var1.optionName}`
             console.log('image ->',image)
             if (image) {
-                console.log('imaegIF ->',item.productSku)
                 formData.append('img', image)
-                const promise = client.post(`/products/img/?warehouseId=${item.warehouseId}&productId=${productId}&productSku=${item.productSku}`, formData, config)
+                const promise = client.post(`/products/img/?warehouseId=${item.warehouseId}&productId=${productId}&productSku=${item.productSku}&uniqueIdentifier=${uniqueIdentifier}`, formData, config)
                 imagePromises.push(promise)
             } else if(!image && productArray[index].preview){
-                console.log('imaegELSE ->',item.productSku)
                 //new data
                 const updateImgData = {
                     warehouseId:item.warehouseId,
                     productSku:item.productSku,
+                    uniqueIdentifier:uniqueIdentifier
                 }
                 const currentPrevItem = prevItems?.find(prev=>prev.id===currentItem.id)
                 console.log('previtem ->',currentPrevItem)
                 if(currentPrevItem){
-                    const updateImagePromise = client.patch(`/products/img/update?warehouseId=${currentPrevItem?.warehouseId}&productId=${productId}&productSku=${currentPrevItem.productSku}`,updateImgData)
+                    const updateImagePromise = client.patch(`/products/img/update?warehouseId=${currentPrevItem?.warehouseId}&productId=${productId}&productSku=${currentPrevItem.productSku}&uniqueIdentifier=${uniqueIdentifier}`,updateImgData)
                     updateImageDetailsPromises.push(updateImagePromise)
                 }
             }else return
@@ -179,32 +179,11 @@ export const uploadProductImage = (productId, productItems, productArray,prevIte
         console.log('error get image url -> ', error.message)
     }
 }
-// export const updateProductImage = (productId,productItems,productArray) => {
-//     try {
-//         const imagePromises = []
-//         const config = {
-//             headers: {
-//                 "content-type": "multipart/form-data",
-//             }
-//         };
-//         productItems.forEach((item, index) => {
-//             const formData = new FormData()
-//             // const id = item._id
-//             const image = productArray[index].img
-//             if (image) {
-//                 formData.append('img', image)
-//                 const promise = client.post(`/products/img/update/?warehouseId=${item.warehouseId}&productId=${productId}&productSku=${item.productSku}`, formData, config)
-//                 imagePromises.push(promise)
-//             } else return
-//         });
-//         return imagePromises
-//     } catch (error) {
-//         console.log('error get image url -> ', error.message)
-//     }
-// }
+
 export const getProductItemImage = (item, productId) => async (dispatch) => {
     try {
-        const image = await client.get(`/products/img/${productId}?warehouseId=${item.warehouseId}&productSku=${item.productSku}`, {
+        const uniqueIdentifier = item.var2?.id ? `${item.var1.optionName}-${item.var2.optionName}` : `${item.var1.optionName}`
+        const image = await client.get(`/products/img/${productId}?warehouseId=${item.warehouseId}&productSku=${item.productSku}&uniqueIdentifier=${uniqueIdentifier}`, {
             responseType: "arraybuffer",
             headers: { 'content-Type': 'application/json' }
         });
