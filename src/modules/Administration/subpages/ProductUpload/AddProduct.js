@@ -119,7 +119,7 @@ const AddProduct = ({
 
     const handleGoPrevPage = () => {
         navigate("/main/admin/product")
-        // setProductVariations([])
+        setProductVariations([])
     }
     const handleIsAddVariation = () => {
         // productVariations.length >= 1 ? setEditVariations(true) : setIsVariationExist(true)
@@ -139,7 +139,7 @@ const AddProduct = ({
         return () => {
             console.log('add return')
             setProductVariationDetail([])
-            // setProductVariations([])
+            setProductVariations([])
         }
     }, [])
 

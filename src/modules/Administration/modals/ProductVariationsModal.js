@@ -88,6 +88,13 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, setStoreVariatio
         }
     }, [submitVariations])
 
+    useEffect(()=>{
+        if(show && productVariations.length>=1){
+            const mappedVar = productVariations.map(single =>({...single}))
+            setVariations([...mappedVar])
+        }
+    },[show])
+
     useEffect(() => {
         if (productVariations.every(variation => variation.name === "" && variation.variationTypeId === "")) {
             console.log("hi")
