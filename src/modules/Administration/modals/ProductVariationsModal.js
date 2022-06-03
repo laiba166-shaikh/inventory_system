@@ -64,6 +64,12 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, setStoreVariatio
         setSubmitVariations([...variations])
     }
 
+    // useEffect(()=>{
+    //     console.log('mount')
+    //     const mappedVar = productVariations.map(single =>({...single}))
+    //     setVariations([...mappedVar])
+    // },[])
+
     useEffect(() => {
         // console.log('mount')
         // setVariations([...productVariations])
@@ -83,16 +89,17 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, setStoreVariatio
     }, [submitVariations])
 
     useEffect(() => {
-        console.log("hi")
         if (productVariations.every(variation => variation.name === "" && variation.variationTypeId === "")) {
+            console.log("hi")
             setFieldValue("isvariableProduct", false)
             return
         }
         if (productVariations.length >= 1) {
             console.log("redux var get ->", productVariations)
-            setVariations([...productVariations])
+            const mappedVar = productVariations.map(single =>({...single}))
+            setVariations([...mappedVar])
         }
-    }, [productVariations, setFieldValue])
+    }, [productVariations])
 
     useEffect(() => {
         console.log("local state ->",variations)
@@ -104,8 +111,13 @@ const ProductVariationsModal = ({ show, onClose, setFieldValue, setStoreVariatio
     }, [variations])
 
     const setOptionOnSubmit = (index,optionList) => {
-        variations[index].options = optionList
-        setVariations([...variations])
+        // variations[index].options = optionList
+        const updateVar = variations.map((single,idx)=>{
+            if(idx===index){
+                return {...single,options:[...optionList]}
+            }else return single
+        })
+        setVariations([...updateVar])
     }
 
     return (

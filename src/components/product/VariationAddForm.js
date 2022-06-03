@@ -115,7 +115,7 @@ const VariationAddForm = ({ variationTypes = [], variations, index, handleChange
     const handleDeleteVariation = () => {
         if (variations.length > 1) {
             const singleVar = variations.filter((_, varIndex) => varIndex !== index)
-            handleChangeVariation(singleVar) //set single array
+            handleChangeVariation([...singleVar]) //set single array
             setOptionList([...singleVar[0].options])
         } else {
             handleChangeVariation([{
