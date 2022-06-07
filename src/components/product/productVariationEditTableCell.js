@@ -31,7 +31,7 @@ const ProductVariationEditTableCell = (props) => {
 
     const { warehouses, productVariations } = useSelector(state => ({
         warehouses: state.warehouses.warehouses,
-        productVariations: state.productVariations.productVariations,
+        productVariations: state.storeVariations.productVariations,
     }))
 
     const checkWarehouse = (currValue) => {

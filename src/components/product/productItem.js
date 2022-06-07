@@ -35,7 +35,7 @@ const ProductItem = (props) => {
     const [loading, setLoading] = useState(false);
 
     const { productVariations, warehouses } = useSelector(state => ({
-        productVariations: state.productVariations.productVariations,
+        productVariations: state.storeVariations.productVariations,
         warehouses: state.warehouses.warehouses
     }))
 

@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
     categories: CategoryReducer,
     variationTypes:VariationTypeReducer,
     products: ProductReducer,
-    productVariations:ProductVariationsReducer,
+    storeVariations:ProductVariationsReducer,
     productItems:ProductItemsReducer
 });
 

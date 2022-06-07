@@ -164,7 +164,6 @@ const AddProduct = ({
     }, [productId])
 
     useEffect(() => {
-        console.log("debug1 ->",productVariations)
         if (productVariations.every(variation => variation.name === "" && variation.variationTypeId === "")) {
             console.log('debug2')
             setProductVariationDetail([])
@@ -173,11 +172,11 @@ const AddProduct = ({
     }, [productVariations])
 
     useEffect(() => {
-        if (productVarResponse.length >= 1 && variationTypesRes.length >= 1) {
-            var variations = modelProductVariationsFromResponse(productVarResponse, variationTypesRes)
+        if (productId && productVarResponse.length >= 1 && variationTypesRes.length >= 1) {
+            let variations = modelProductVariationsFromResponse(productVarResponse, variationTypesRes)
             setProductVariations([...variations])
         }
-    }, [productVarResponse, variationTypesRes,setProductVariations])
+    }, [productVarResponse,productId, variationTypesRes,setProductVariations])
 
     useEffect(() => {
         console.log('rows ->', productVariationDetail)
@@ -338,7 +337,7 @@ const AddProduct = ({
                                 }
                             </Grid>
                             {
-                                (!productVariations.every(variation => variation.name === "" && variation.variationTypeId === "")) &&
+                                (!productVariations.every(variation => variation.name === "" && variation.variationTypeId === "")) && 
                                 <ProductVariationsTable
                                     rows={productVariationDetail}
                                     setRows={setProductVariationDetail}
@@ -373,7 +372,7 @@ const AddProduct = ({
 const mapStateToProps = (state) => ({
     categories: state.categories.category,
     warehouses: state.warehouses.warehouses,
-    productVariations: state.productVariations.productVariations,
+    productVariations: state.storeVariations.productVariations,
     variationTypesRes: state.variationTypes.variationType,
     userId: state.auth.userData.id
 })

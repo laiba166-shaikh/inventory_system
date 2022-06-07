@@ -69,13 +69,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const VariationAddForm = ({ variationTypes = [], variations, index, handleChangeVariation, storeVariations,setOptions }) => {
+const VariationsForm = ({ variationTypes = [], variations, index, handleChangeVariation, storeVariations }) => {
     const classes = useStyles();
     const inputRefs = useRef([])
 
     const [showOptions, setShowOptions] = useState(false);
     const [optionValue, setOptionValue] = useState({ id: "", optionName: "" });
     const [optionList, setOptionList] = useState([])
+    const [varcategory,setCategory]=useState({})
 
     const handleSelectVariation = (e) => {
         const value = e.target.value
@@ -94,9 +95,7 @@ const VariationAddForm = ({ variationTypes = [], variations, index, handleChange
             return
         }
         //add new item in list
-        const newItemToAdd = { optionName: optionValue.optionName, id: optionValue.optionName }
-        setOptionList([...optionList,newItemToAdd ])
-        setOptions(index,[...optionList,newItemToAdd ])
+        setOptionList([...optionList, { optionName: optionValue.optionName, id: optionValue.optionName }])
         //reset state
         setOptionValue({ id: "", optionName: "" })
     }
@@ -107,7 +106,6 @@ const VariationAddForm = ({ variationTypes = [], variations, index, handleChange
     const handleDeleteOption = (deleteIndex) => {
         const remainOptions = optionList.filter((_, index) => index !== deleteIndex)
         setOptionList([...remainOptions])
-        setOptions(index,remainOptions)
         if (remainOptions.length === 0) {
             handleDeleteVariation()
         }
@@ -115,7 +113,7 @@ const VariationAddForm = ({ variationTypes = [], variations, index, handleChange
     const handleDeleteVariation = () => {
         if (variations.length > 1) {
             const singleVar = variations.filter((_, varIndex) => varIndex !== index)
-            handleChangeVariation([...singleVar]) //set single array
+            handleChangeVariation(singleVar) //set single array
             setOptionList([...singleVar[0].options])
         } else {
             handleChangeVariation([{
@@ -138,25 +136,19 @@ const VariationAddForm = ({ variationTypes = [], variations, index, handleChange
     },[variations,index])
 
     useEffect(() => {
-        console.log("storeVariations",storeVariations)
-
         if (storeVariations?.length >= 1) {
+            console.log("storeVariations",storeVariations)
             const variationsOptions = storeVariations[index]?.options
-            // variations[index]['options'] = variationsOptions
-            // variations[index]['name']=storeVariations[index].name
-            // variations[index]['variationTypeId']=storeVariations[index].variationTypeId
-            // handleChangeVariation([...variations])
             setOptionList([...variationsOptions])
         }
     }, [storeVariations])
     
 
-    // useEffect(() => {
-    //     // console.log("optionList ->",optionList)
-    //     variations[index].options = optionList
-    //     handleChangeVariation([...variations])
-    //     // inputRefs.current = inputRefs.current.slice(0, optionList.length) //?
-    // }, [optionList, index,])
+    useEffect(() => {
+        variations[index].options = optionList
+        handleChangeVariation([...variations])
+        // inputRefs.current = inputRefs.current.slice(0, optionList.length) //?
+    }, [optionList, index])
     return (
         <Grid container spacing={2} className={classes.root}>
             <Grid item md={5} sm={5}>
@@ -228,4 +220,4 @@ const VariationAddForm = ({ variationTypes = [], variations, index, handleChange
     )
 }
 
-export default VariationAddForm
+export default VariationsForm
